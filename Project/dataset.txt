@@ -1,0 +1,29 @@
+import pandas as pd
+from sklearn.ensemble import IsolationForest
+from sklearn.preprocessing import StandardScaler
+
+# Load audit data into a pandas DataFrame
+audit_data = pd.read_csv('audit_data.csv')
+
+# Select relevant features for analysis
+features = ['feature1', 'feature2', 'feature3', ...]
+
+# Perform feature scaling
+scaler = StandardScaler()
+scaled_data = scaler.fit_transform(audit_data[features])
+
+# Apply anomaly detection using Isolation Forest
+model = IsolationForest(contamination=0.05)  # Adjust the contamination parameter as per your requirements
+model.fit(scaled_data)
+
+# Predict outliers (fraudulent instances)
+predictions = model.predict(scaled_data)
+
+# Add the outlier predictions as a new column in the DataFrame
+audit_data['fraud_prediction'] = predictions
+
+# Identify fraud instances
+fraudulent_instances = audit_data[audit_data['fraud_prediction'] == -1]
+
+# Print fraudulent instances
+print(fraudulent_instances)
